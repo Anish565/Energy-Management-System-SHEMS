@@ -14,7 +14,8 @@ import { DisplayComponent } from './components/DisplayComponent.jsx';
 import { Home } from "./components/Home.jsx";
 import { HeaderElement } from './components/ui/HeaderElement';
 import { ProtectedRoute } from "./components/utils/ProtectedRoute"
-
+import { Location } from './components/ServiceLocation.jsx';
+import { Profile } from './components/Profile.jsx';
 
 function App() {
   const [customrers, setCustomers] = useState(false);
@@ -43,7 +44,9 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/deviceRegister" element={<DeviceRegister />} />
+            <Route path="/locationRegister" element={<Location/>}/>
             <Route path="/graphs" element={<DisplayComponent />} />
+            <Route path="/profile" element={<Profile/>}/>
           </Route>
         </Routes>
       </Router>
