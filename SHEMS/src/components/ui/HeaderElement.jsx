@@ -18,6 +18,8 @@ export const HeaderElement = () => {
           <Link to="/" href="#" className="text-gray-600 dark:text-gray-200 mx-3 hover:text-gray-500">Home</Link>
           { userStore.user ? <Link to="/graphs" href="#" className="text-gray-600 dark:text-gray-200 mx-3 hover:text-gray-500">Graphs</Link> : null}
           { userStore.user ? <Link to="/deviceRegister" href="#" className="text-gray-600 dark:text-gray-200 mx-3 hover:text-gray-500">Register Device</Link> : null}
+          { userStore.user ? <Link to="/locationRegister" href="#" className="text-gray-600 dark:text-gray-200 mx-3 hover:text-gray-500">Register Location</Link> : null}
+          { userStore.user ? <Link to="/profile" href="#" className="text-gray-600 dark:text-gray-200 mx-3 hover:text-gray-500">Profile</Link> : null}
        
         <div className="flex gap-4">
           {userStore.user ? <img class="w-10 h-10 rounded-full" src={`https://ui-avatars.com/api?name=${userStore.user.name}`} alt="Rounded avatar" /> : null}

@@ -1,9 +1,9 @@
 const Pool = require('pg').Pool
 const pool = new Pool({
-    user: 'my_user',
+    user: 'postgres',
     host: 'localhost',
-    database: 'my_database',
-    password: 'root',
+    database: 'SHEMS-database',
+    password: 'anish1017',
     port: 5432,
 });
 // get all customers our database

@@ -42,12 +42,11 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route element={<ProtectedRoute />}>
+          <Route element={<ProtectedRoute />}/>
             <Route path="/deviceRegister" element={<DeviceRegister />} />
             <Route path="/locationRegister" element={<Location/>}/>
             <Route path="/graphs" element={<DisplayComponent />} />
             <Route path="/profile" element={<Profile/>}/>
-          </Route>
         </Routes>
       </Router>
     </>
