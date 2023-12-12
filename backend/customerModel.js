@@ -1,12 +1,4 @@
-const Pool = require('pg').Pool
-const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'SHEMS-database',
-    password: 'anish1017',
-    port: 5432,
-});
-// get all customers our database
+const { pool } = require('./db.js');
 
 const getCustomer  = async (custID) => {
     try{
@@ -125,12 +117,11 @@ const registerAddress = (body) => {
 
 
 // service location registration
-const registerServiceLoc = (body) => {
+const registerServiceLoc = (addressId, serviceLocation) => {
     return new Promise(function (resolve, reject){
-        const {addressID, moveInDate, squareFoot, numbed, numOccupants} = body;
         pool.query(
             "INSERT INTO ServiceLocation (addressID, moveInDate, squareFoot, numbed, numOccupants) VALUES ($1, $2, $3, $4) RETURNING *",
-            [addressID, moveInDate, squareFoot, numbed, numOccupants],
+            [addressId, ...serviceLocation],
             (error, results) => {
                 if (error){
                     reject(error);
