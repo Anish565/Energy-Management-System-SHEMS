@@ -1,9 +1,10 @@
-const { getCustomerByName } = require('../customerModel')
+const { getCustomerById, createCustomer, registerCustomerAddress, registerAddress } = require('../customerModel')
 const jwt = require('jsonwebtoken')
+const {tx} = require('../utils/tx')
 
 const login = async (req, res) => {
   try {
-    const customer = await getCustomerByName(req.body.cfname, req.body.clname)
+    const customer = await getCustomerById(req.body.custID)
 
     if (customer.passcode !== req.body.passcode) {
       return res.json({ error: 'Incorrect password' })
@@ -13,8 +14,8 @@ const login = async (req, res) => {
       if (err) {
         return res.json({ error: 'Error signing token' })
       }
-
-      return res.json({ token })
+      console.log(token)
+      return res.json({ token, name: customer.cfname })
     })
   } catch (e) {
     res.json({ error: e.message })
@@ -23,24 +24,20 @@ const login = async (req, res) => {
 
 const signup = async (req, res) => {
   try {
-    const customer = await getCustomerByName(req.body.cfname, req.body.clname)
-
-    if (customer) {
-      return res.json({ error: 'Customer already exists' })
-    }
-
-    const newCustomer = await createCustomer(req.body)
-
-    jwt.sign({ id: newCustomer.custID }, 'secret', (err, token) => {
-      if (err) {
-        return res.json({ error: 'Error signing token' })
-      }
-
-      return res.json({ token, message: "Signup successful" })
+    await tx(async client => {
+      const customer = await createCustomer(client, req.body)
+      console.log('created customer: ', customer)
+      const address  = await registerAddress(client, req.body)
+      console.log('created address: ', address)
+      await registerCustomerAddress(client, customer.custid, address.addressid, req.body.isBilling)
+      console.log('created customer address')
     })
+
+    return res.json({ message: 'Customer created successfully' })    
   } catch (e) {
+    console.log(e)
     res.json({ error: e.message })
   }
 }
 
-module.exports = { login }
+module.exports = { login, signup }

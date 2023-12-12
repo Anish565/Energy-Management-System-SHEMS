@@ -6,6 +6,7 @@ const tx = async (cb) => {
   try {
     await client.query('BEGIN');
     try {
+      console.log('started transaction')
       await cb(client);
       await client.query('COMMIT');
     } catch (error) {

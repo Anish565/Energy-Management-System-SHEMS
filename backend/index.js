@@ -4,6 +4,7 @@ const port = 3001
 
 const customer_model = require('./customerModel')
 const { customerRouter }  =  require('./routes/customer.routes.js')
+const { authRouter }  =  require('./routes/auth.routes.js')
 
 app.use(express.json())
 
@@ -15,7 +16,7 @@ app.use(function(req, res, next){
 });
 
 app.use('/customer', customerRouter)
-
+app.use('/auth', authRouter)
 
 app.get('/', (req, res) => {
     customer_model.getCustomers()
