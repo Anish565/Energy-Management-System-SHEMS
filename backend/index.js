@@ -3,6 +3,7 @@ const app = express()
 const port = 3001
 
 const customer_model = require('./customerModel')
+const { customerRouter }  =  require('./routes/customer.routes.js')
 
 app.use(express.json())
 
@@ -13,6 +14,7 @@ app.use(function(req, res, next){
     next();
 });
 
+app.use('/customer', customerRouter)
 
 
 app.get('/', (req, res) => {
@@ -25,26 +27,26 @@ app.get('/', (req, res) => {
     })
 })
 
-app.post('/customers', (req, res) => {
-    customer_model.createCustomer(req.body)
-    .then(response => {
-        res.status(200).send(response);
-    })
-    .catch(error => {
-        res.status(500).send(error);
-    })
-})
+// app.post('/customers', (req, res) => {
+//     customer_model.createCustomer(req.body)
+//     .then(response => {
+//         res.status(200).send(response);
+//     })
+//     .catch(error => {
+//         res.status(500).send(error);
+//     })
+// })
 
 
-app.delete('/customers/:id', (req, res) => {
-    customer_model.deleteCustomer(req.params.id)
-    .then(response => {
-        res.status(200).send(response);
-    })
-    .catch(error => {
-        res.status(500).send(error);
-    })
-})
+// app.delete('/customers/:id', (req, res) => {
+//     customer_model.deleteCustomer(req.params.id)
+//     .then(response => {
+//         res.status(200).send(response);
+//     })
+//     .catch(error => {
+//         res.status(500).send(error);
+//     })
+// })
 
 app.put('/customers/:id', (req, res) =>{
     const id = req.params.id;

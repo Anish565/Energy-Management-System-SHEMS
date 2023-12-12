@@ -8,7 +8,7 @@ const pool = new Pool({
 });
 // get all customers our database
 
-const getUser  = async () => {
+const getCustomer  = async (custID) => {
     try{
         return await new Promise(function (resolve, reject) {
             pool.query("Select * from customers where custID = $1",
@@ -32,7 +32,7 @@ const getUser  = async () => {
 
 
 // create a new customer
-const createUser = (body) => {
+const createCustomer = (body) => {
     return new Promise(function (resolve, reject){
         const {custID, cfname, clname, passcode} = body;
         pool.query(
@@ -56,7 +56,7 @@ const createUser = (body) => {
 };
 
 // delete a customer
-const deleteUser = (custID) => {
+const deleteCustomer = (custID) => {
     return new Promise(function (resolve, reject){
         pool.query(
             "DELETE FROM customers WHERE custID = $1",
@@ -74,7 +74,7 @@ const deleteUser = (custID) => {
 
 
 // Update a customer record
-const updateUser = (custID, body) => {
+const updateCustomer = (custID, body) => {
     return new Promise(function (resolve, reject){
         const {custID, cfname, clname} = body;
         pool.query(
@@ -148,8 +148,8 @@ const registerServiceLoc = (body) => {
 
 
 module.exports = {
-    getUser,
-    createUser,
-    deleteUser,
-    updateUser
+    getCustomer,
+    createCustomer,
+    deleteCustomer,
+    updateCustomer
 };
