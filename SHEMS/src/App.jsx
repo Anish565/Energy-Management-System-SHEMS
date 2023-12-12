@@ -16,9 +16,11 @@ import { HeaderElement } from './components/ui/HeaderElement';
 import { ProtectedRoute } from "./components/utils/ProtectedRoute"
 import { Location } from './components/ServiceLocation.jsx';
 import { Profile } from './components/Profile.jsx';
+import { ManageServiceLoc } from './components/ManageServiceLoc.jsx';
+
 
 function App() {
-  const [customrers, setCustomers] = useState(false);
+  
 
   // function getCustomers(){
   //   fetch('http://localhost:3001')
@@ -47,6 +49,7 @@ function App() {
             <Route path="/locationRegister" element={<Location/>}/>
             <Route path="/graphs" element={<DisplayComponent />} />
             <Route path="/profile" element={<Profile/>}/>
+            <Route path='/manageService' element={<ManageServiceLoc/>}/>
         </Routes>
       </Router>
     </>

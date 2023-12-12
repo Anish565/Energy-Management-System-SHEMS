@@ -1,0 +1,39 @@
+getServiceLocation addresses
+
+select serviceID, street, unitno, city, state, zipcode
+FROM CustomerAddress CA JOIN ServiceLocation SL ON CA.addressID = SL.addressID JOIN Address A on CA.addressID = A.addressID Where
+CA.custID = custID
+custID is the input
+
+Remove ServiceLocation 
+same query but the ID returned will help delete the corresponding row. 
+
+
+device registeration
+
+insert deviceID and serviceID into the table from the selected componenets
+
+
+graphs
+
+
+
+PT.start_time = (select max(start_time) from price_map where zipcode = pd.zipcode_id and start_time <= pd.timestamp)
+
+select max(time) from priceTable where zipcode = A.zipcode and time < DE.timestamp
+
+shows the total price per location (month) 
+
+
+
+shows total energy consumed per location (month)
+
+total energy consumed per device per location
+
+total price per device per location 
+
+shows energy used per device (time)
+
+
+
+shows total price per device (time)

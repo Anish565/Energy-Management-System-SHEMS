@@ -12,7 +12,7 @@ export const Login = () => {
   const handleLogin = () => {
     // validations here anta
     const name = username.split("@")[0];
-    setUser({id: 1, name: name});
+    setUser({id: 1, name: name}); 
   }
   return (
     // <div className='h-screen flex flex-col justify-center items-center gap-4'>

@@ -15,9 +15,6 @@ export const DeviceRegister = () => {
                 <FormTextElement id="modelnum" label="Model Number" type="text" placeholder='Search...'/>
             </div>
             <div>
-                <FormTextElement id="nickname" label="Nickname" type="text" placeholder="Optional..."/>
-            </div>
-            <div>
                 <FormTextElement id="serviceLoc" label='Location' type="text" placeholder="Search..."/>
             </div>
 
