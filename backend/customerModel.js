@@ -22,6 +22,29 @@ const getCustomer  = async (custID) => {
     }
 };
 
+const getCustomerByName = async (cfname, clname) => {
+    try{
+        return await new Promise(function (resolve, reject) {
+            pool.query("Select * from customers where cfname = $1 and clname = $2",
+            [cfname, clname], (error, results) => {
+                if (error){
+                    reject(error);
+                }
+                if (results && results.rows){
+                    resolve(results.row);
+                }
+                else{
+                    reject (new Error("No records found"));
+                }
+            });
+        });
+    } catch (error_1){
+        console.error(error_1);
+        throw new Error("Internal server error");
+    }
+
+}
+
 
 // create a new customer
 const createCustomer = (body) => {
@@ -142,5 +165,6 @@ module.exports = {
     getCustomer,
     createCustomer,
     deleteCustomer,
-    updateCustomer
+    updateCustomer,
+    getCustomerByName
 };
