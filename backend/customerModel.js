@@ -159,7 +159,7 @@ const registerCustomerAddress = (client, custID, addressID, isBilling) => {
 const getServiceLocByCustomerId = async (custID) => {
     try{
         return await new Promise(function (resolve, reject){
-            pool.query("Select * from Address where addressID in (select addressID from CustomerAdress join ServiceLocation on addressID where custID = $1)",
+            pool.query("Select * from Address a join ServiceLocation SLoc on SLoc.addressID = a.addressID where SLoc.addressID in (select CA.addressID from CustomerAddress CA join ServiceLocation SL on SL.addressID = CA.addressID where CA.custID = $1)",
             [custID],(error, results) => {
                 if (error){
                     reject(error);
@@ -208,7 +208,7 @@ const registerServiceLoc = (client, addressID, body) => {
     const {moveInDate, squareFoot, numbed, numOccupants} = body;
     return new Promise(function (resolve, reject){
         pool.query(
-            "INSERT INTO ServiceLocation (addressID, moveInDate, squareFoot, numbed, numOccupants) VALUES ($1, $2, $3, $4) RETURNING *",
+            "INSERT INTO ServiceLocation (addressID, moveInDate, squareFoot, numbed, numOccupants) VALUES ($1, $2, $3, $4, $5) RETURNING *",
             [addressID, moveInDate, squareFoot, numbed, numOccupants],
             (error, results) => {
                 if (error){

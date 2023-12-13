@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken')
+
 const authUser = async (req, res, next) => {
   const token = req.headers.authorization.split(' ')[1]
   console.log(token)
@@ -8,16 +10,15 @@ const authUser = async (req, res, next) => {
 
   try {
     console.log('must decode')
-    jwt.verify(token, 'secret', (err, decoded) => {
-      if (err) {
-        throw Error(e)
-      }
-      req.customer = decoded
-      console.log('decoded')
-      next()
-    })
+    const payload = jwt.verify(token, 'secret')
+    if (payload === null || typeof payload === 'string') return res.sendStatus(403)
+    console.log(payload)
+    req.customer = payload
+    console.log('decoded')
+    next()
   } catch (e) {
-    res.status(401).send('fuck off')
+    console.log(e)
+    return res.sendStatus(403)
   }
 }
 

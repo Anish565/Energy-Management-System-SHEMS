@@ -1,10 +1,13 @@
 const Pool = require('pg').Pool
+const os = require('os');
+
+const  {username } = os.userInfo();
 
 const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
     database: 'SHEMS-database',
-    password: 'admin',
+    password: (username === 'srava') ? 'admin' : 'anish1017',
     port: 5432,
 });
 
