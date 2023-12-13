@@ -50,6 +50,7 @@ const getServiceLocationsByCustomer = async (req, res) => {
 }
 
 const deleteServiceLocation = async (req, res) => {
+  console.log(req.params)
   try {
     await customer_model.deleteServiceLocation(Number(req.params.id))
     return res.json({ message: 'Deleted service location successfully' })

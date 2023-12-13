@@ -226,10 +226,12 @@ const registerServiceLoc = (client, addressID, body) => {
 };
 
 const getTotalEnergyPerLocation = (custID, body) => {
-    const {month, year } = body;
+    const { month, year } = body;
+
+    console.log(month, year, custID)
     return new Promise(function (resolve, reject){
-        pool.query("select SL.serviceID, SUM(DE.value) AS total_energy from DeviceEvents DE join DeviceRegister DR on DE.deviceRegID =  DR.deviceRegID join ServiceLocation SL on SL.serviceID = DR.serviceID join CustomerAddress CA on CA.addressID = SL.addressID where EXTRACT(MONTH FROM DE.timestamp) = $1 AND EXTRACT(YEAR FROM DE.timestamp) = $2 AND DE.eventLabel = 'Energy Consumed'and custID = $3 group by SL.serviceID",
-        [month, year, custID],
+        pool.query("select SL.serviceID, A.street,SUM(DE.value) AS total_energy from DeviceEvents DE join DeviceRegister DR on DE.deviceRegID =  DR.deviceRegID join ServiceLocation SL on SL.serviceID = DR.serviceID join CustomerAddress CA on CA.addressID = SL.addressID join Address A on A.addressid = SL.addressid where EXTRACT(MONTH FROM DE.timestamp) = $1 AND EXTRACT(YEAR FROM DE.timestamp) = $2 AND DE.eventLabel = 'Energy Consumed'and custID = $3 group by SL.serviceID, A.street",
+        [Number(month), Number(year), custID],
         (error, results) => {
             if (error){
                 reject(error);
@@ -247,7 +249,7 @@ const getTotalEnergyPerLocation = (custID, body) => {
 const getTotalPricePerLocation = (custID, body) => {
     const {month, year} = body;
     return new Promise(function(resolve, reject){
-        pool.query("select SL.serviceID, SUM(DE.value * PT.price) AS total_energy_cost from DeviceEvents DE join DeviceRegister DR on DE.deviceRegID = DR.deviceRegID join ServiceLocation SL on SL.serviceID = DR.serviceID join CustomerAddress CA on CA.addressID = SL.addressID join Address A on A.addressID = CA.addressID join PriceTable PT on PT.zipcode = A.zipcode and PT.time = (select max(time) from PriceTable where zipcode = A.zipcode and time < DE.timestamp::TIME) where EXTRACT(MONTH FROM DE.timestamp) = $1 AND EXTRACT(YEAR FROM DE.timestamp) = $2 AND DE.eventLabel = 'Energy Consumed' and custID = $3 group by SL.serviceID",
+        pool.query("select SL.serviceID, A.street, SUM(DE.value * PT.price) AS total_energy_cost from DeviceEvents DE join DeviceRegister DR on DE.deviceRegID = DR.deviceRegID join ServiceLocation SL on SL.serviceID = DR.serviceID join CustomerAddress CA on CA.addressID = SL.addressID join Address A on A.addressID = CA.addressID join PriceTable PT on PT.zipcode = A.zipcode and PT.time = (select max(time) from PriceTable where zipcode = A.zipcode and time < DE.timestamp::TIME) where EXTRACT(MONTH FROM DE.timestamp) = $1 AND EXTRACT(YEAR FROM DE.timestamp) = $2 AND DE.eventLabel = 'Energy Consumed' and custID = $3 group by SL.serviceID, A.street",
         [month, year, custID],
         (error, results) => {
             if (error){
