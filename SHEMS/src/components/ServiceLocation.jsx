@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { FormTextElement } from "./ui/FormElement";
+import axios from "axios"
+import { useNavigate } from "react-router";
+import { useUserStore } from "../stores/userStore";
 
 export const Location = () => {
   const [street, setStreet] = useState('');
@@ -13,11 +16,45 @@ export const Location = () => {
   const [numocc, setNumocc] = useState('');
   const [isChecked, setIsChecked] = useState(false);
 
+  const user = useUserStore((state) => state.user);
+
+  const navigate = useNavigate();
+
+  const handleCreate = (e) => {
+    try {
+      e.preventDefault();
+      axios.post("http://localhost:3001/customer/serviceLoc", {
+        street: street,
+        unitno: unit,
+        city: city,
+        state: state,
+        zipcode: zip,
+        moveInDate: movein,
+        squareFoot: sqft,
+        numbed: numbed,
+        numOccupants: numocc,
+        isBilling: isChecked
+      }, {
+        headers: {
+          'Authorization': `Bearer ${user.token}`
+        }
+      }).then((response) => {
+        if (response.data.error) {
+          alert(response.data.error);
+          return
+        }
+        return navigate("/profile");
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
 
     return (
         <div className="container">
             <h2 className="flex-block text-4xl text-white font-bold m-1.5">Add Service Location</h2>
-            <form className="min-w-md">
+            <form className="min-w-md" onSubmit={handleCreate}>
                 <FormTextElement id="street" OnChange={(e) => setStreet(e.target.value)} type="text" placeholder="Street"/>
                 <FormTextElement id="unitno" OnChange={(e) => setUnit(e.target.value)} type="text" placeholder="Unit No"/>
                 <FormTextElement id="city" OnChange={(e) => setCity(e.target.value)} type="text" placeholder="City"/>

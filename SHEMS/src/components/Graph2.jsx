@@ -1,26 +1,82 @@
-import React from 'react'
+import { useState } from 'react'
 import LineChart from './graphs/LineChart'
+import axios from 'axios'
+import { useUserStore } from '../stores/userStore';
 
 export const Graph2 = () => {
-   
-    var trace1 = {
-        x: [1, 2, 3, 4],
-        y: [10, 15, 13, 17],
-        type: 'scatter'
-      };
-  
-      var trace2 = {
-        x: [1, 2, 3, 4],
-        y: [16, 5, 11, 9],
-        type: 'scatter'
-      };
-  
-      var data = [trace1, trace2];
+
+  const user = useUserStore((state) => state.user);
+
+
+  const [month, setMonth] = useState('1')
+  const [year, setYear] = useState('2023')
+
+
+  const [data, setData] = useState([])
 
   const title = "Graph 2"
+
+  const groupByName = (data) => {
+
+    const final = []
+    let d = {}
+    data.forEach((item) => {
+      if (!d[item.name]) {
+        d[item.name] = {
+          x: [],
+          y: [],
+          name: item.name,
+          type: item.type
+        }
+      }
+      d[item.name].x.push(item.x)
+      d[item.name].y.push(item.y)
+    })
+
+    for (let key in d) {
+      final.push(d[key])
+    }
+    return final
+
+  }
+
   const generate = () => {
 
   }
+
+  let finalData;
+
+  const handleSubmit = () => {
+    axios.post('http://localhost:3001/customer/graph/totalenergy/device', {
+      month: month,
+      year: year
+    }, {
+      headers: {
+        "Authorization": `Bearer ${user.token}`
+      }
+    }).then((response) => {
+      // console.log(response.data);
+      setData(response.data);
+      finalData = response.data.map((item) => {
+        return {
+          x: item.time,
+          y: item.total_energy,
+          name: item.deviceregid,
+          type: 'scatter'
+        }
+      })
+
+      setData(groupByName(finalData));
+
+      
+      generate();
+    })
+
+      
+  }
+
+
+
   return (
     <div className='container'>
       <h1>{title}</h1>
@@ -30,41 +86,40 @@ export const Graph2 = () => {
         <div>
   <div className='flex-col flex gap-5 min-w-md'>
     <div className='flex-row flex gap-2 justify-center'>
-    <label for="month">Month</label>
-    <select id='month'>
+    <label htmlFor="month">Month</label>
+     <select id='month' value={month} onChange={(e) => setMonth(e.target.value)}>
       <option value="">Select a Month</option>
-      <option value="option1">1</option>
-      <option value="option2">2</option>
-      <option value="option3">3</option>
-      <option value="option4">4</option>
-      <option value="option5">5</option>
-      <option value="option6">6</option>
-      <option value="option7">7</option>
-      <option value="option8">8</option>
-      <option value="option9">9</option>
-      <option value="option10">10</option>
-      <option value="option11">11</option>
-      <option value="option12">12</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+      <option value="8">8</option>
+      <option value="9">9</option>
+      <option value="10">10</option>
+      <option value="11">11</option>
+      <option value="12">12</option>
     </select>
   </div>
 
   <div className='flex-row flex gap-2 justify-center'>
-    <label for="year">Year</label>
-    <select id='year' className='justify-start'>
+    <label htmlFor="year">Year</label>
+    <select id='year' value={year} onChange={(e) => setYear(e.target.value)} className='justify-start'>
       <option value="">Select a Year</option>
-      <option value="year1">2023</option>
-      <option value="year2">2022</option>
-      <option value="year3">2021</option>
-      <option value="year4">2020</option>
-      <option value="year5">2019</option>
-      <option value="year6">2018</option>
-
+      <option value="2023">2023</option>
+      <option value="2022">2022</option>
+      <option value="2021">2021</option>
+      <option value="2020">2020</option>
+      <option value="2019">2019</option>
+      <option value="2018">2018</option>
     </select>
   </div>
   </div>
 
   <div>
-  <button type="submit" onClick={generate} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Generate</button>
+  <button type="submit" onClick={handleSubmit} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Generate</button>
   </div>
 </div>
     </div>
