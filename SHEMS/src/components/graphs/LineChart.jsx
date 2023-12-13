@@ -3,22 +3,22 @@ import Plot from 'react-plotly.js';
 
 class LineChart extends React.Component {
   render() {
-    var trace1 = {
-      x: [1, 2, 3, 4],
-      y: [10, 15, 13, 17],
-      type: 'scatter'
-    };
-
-    var trace2 = {
-      x: [1, 2, 3, 4],
-      y: [16, 5, 11, 9],
-      type: 'scatter'
-    };
-
-    var data = [trace1, trace2];
-
+    const {data, title} = this.props;
+    
+    var layout = {
+      width: 700,
+      height: 500,
+      title: title,
+      margin: {
+        l: 50, // left margin
+        r: 50, // right margin
+        b: 50, // bottom margin
+        t: 50, // top margin
+        pad: 10 // padding
+      }
+    }
     return (
-      <Plot data={data}/>
+      <Plot data={data} layout={layout}/>
     );
   }
 }

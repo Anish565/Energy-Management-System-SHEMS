@@ -11,6 +11,7 @@ export const Location = () => {
   const [sqft, setSqft] = useState('');
   const [numbed, setNumbed] = useState('');
   const [numocc, setNumocc] = useState('');
+  const [isChecked, setIsChecked] = useState(false);
 
 
     return (
@@ -27,7 +28,7 @@ export const Location = () => {
                 <FormTextElement id="numBed" OnChange={(e) => setNumbed(e.target.value)} type="number" min="0" step="1" placeholder="Number of Bedrooms"/>
                 <FormTextElement id="numOcc" OnChange={(e) => setNumocc(e.target.value)} type="number" min="0" step="1" placeholder="Number of Occupants"/>
                   <div className="flex items-center h-5">
-                <input id="remember" type="checkbox" value="" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"/>
+                <input id="remember" type="checkbox" checked={isChecked} onChange={() => {console.log(isChecked); setIsChecked(!isChecked);}} value="" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"/>
               <label htmlFor="billingadd" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Billing Address</label>
               </div>
                 <button type="submit" className="text=white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add Address</button>

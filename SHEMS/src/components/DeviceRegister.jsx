@@ -9,7 +9,7 @@ export const DeviceRegister = () => {
         <form className='min-w-md'>
         <div className='flex-col mb-5'>
             <div>
-                <FormTextElement id="device" label="Device Name" type="text" placeholder='Name of the Device'/>
+                <FormTextElement id="device" label="Device Model" type="text" placeholder='Name of the Device'/>
             </div>
             <div>
                 <FormTextElement id="modelnum" label="Model Number" type="text" placeholder='Search...'/>
