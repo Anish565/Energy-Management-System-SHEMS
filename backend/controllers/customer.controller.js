@@ -1,4 +1,5 @@
 const customer_model = require('../customerModel')
+const { pool } = require('../db')
 const { tx } = require('../utils/tx')
 
 const getCustomer = async (req, res) => {
@@ -12,12 +13,11 @@ const getCustomer = async (req, res) => {
 
 const createServiceLog = async (req, res) => {
   try {
+    const address = await customer_model.registerAddress(pool, req.body)
     await tx(async client => {
-      const address = await customer_model.registerAddress(client, req.body)
-      console.log("address")
       await customer_model.registerServiceLoc(client, address.addressid, req.body)
       console.log("service loc")
-      await customer_model.registerCustomerAddress(client, req.customer.custID, address.addressid, req.body.isBilling)
+      await customer_model.registerCustomerAddress(client, req.customer.id, address.addressid, req.body.isBilling)
       console.log("customeraddress")
     })
     res.json({ message: 'Service log created successfully' })
@@ -27,7 +27,68 @@ const createServiceLog = async (req, res) => {
   }
 }
 
+const getDevicesList =  async (req, res) => {
+  try {
+    const devices = await customer_model.getDevicesList()
+    return res.json(devices)
+  } catch (e) {
+    console.error(e)
+    res.json({ error: e.message })
+  }
+}
+
+const getServiceLocationsByCustomer = async (req, res) => {
+  try {
+    const serviceLocations = await customer_model.getServiceLocByCustomerId(req.customer.id)
+    return res.json(serviceLocations)
+  } catch (e) {
+    console.error(e)
+    res.json({ error: e.message })
+  }
+}
+
+const deleteServiceLocation = async (req, res) => {
+  try {
+    await customer_model.deleteServiceLocation(req.params.id)
+    return res.json({ message: 'Deleted service location successfully' })
+  } catch (e) {
+    console.error(e)
+    res.json({ error: e.message })
+  }
+}
+
+const createDeviceRegister = async (req, res) => {
+  try {
+    await customer_model.createDeviceRegister(req.body.deviceID, req.body.serviceID)
+    return res.json({ message: 'Device registered successfully' })
+  } catch (e) {
+    console.log(e)
+    res.json({ error: e.message })
+  }
+}
+
+const getTotalEnergyPerLocation = async (req, res) => {
+  try {
+    const totalEnergy = await customer_model.getTotalEnergyPerLocation(req.params.id)
+    return res.json(totalEnergy)
+  } catch (e) {
+    console.log(e)
+    res.json({ error: e.message })
+  }
+}
 
 
 
-module.exports = { getCustomer, createServiceLog }
+
+
+
+
+
+module.exports = { 
+  getCustomer, 
+  createServiceLog,
+  getDevicesList,
+  deleteServiceLocation,
+  getServiceLocationsByCustomer,
+  createDeviceRegister
+}

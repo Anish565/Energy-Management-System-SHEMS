@@ -156,30 +156,6 @@ const registerCustomerAddress = (client, custID, addressID, isBilling) => {
 
 // in the above function we can create an option to check which webpage is calling the function and execute accordingly.
 
-
-// getAddress 
-const getAddressByCustomerId = async (custID) => {
-    try{
-        return await new Promise(function (resolve, reject) {
-            pool.query("Select * from Address where addressID in (select addressID from CustomerAddress where custID = $1)",
-            [custID], (error, results) => {
-                if (error){
-                    reject(error);
-                }
-                if (results && results.rows){
-                    resolve(results.rows[0]);
-                }
-                else{
-                    reject (new Error("No records found"));
-                }
-            });
-        });
-    } catch (error_1){
-        console.error(error_1);
-        throw new Error("Internal server error");
-    }
-}
-
 const getServiceLocByCustomerId = async (custID) => {
     try{
         return await new Promise(function (resolve, reject){
@@ -189,7 +165,7 @@ const getServiceLocByCustomerId = async (custID) => {
                     reject(error);
                 }
                 if (results && results.rows){
-                    resolve(results.rows[0]);
+                    resolve(results.rows);
                 }
                 else{
                     reject (new Error("No records found"));
@@ -211,7 +187,7 @@ const getDevicesList = async () =>{
                     reject(error);
                 }
                 if (results && results.rows){
-                    resolve(results.row[0]);
+                    resolve(results.rows);
                 }
                 else{
                     reject(new Error("No records found"));
@@ -248,7 +224,7 @@ const registerServiceLoc = (client, addressID, body) => {
     });
 };
 
-const getTotalEnergyPerLocation = (client, custID, body) => {
+const getTotalEnergyPerLocation = (custID, body) => {
     const {month, year } = body;
     return new Promise(function (resolve, reject){
         pool.query("select SL.serviceID, SUM(DE.value) AS total_energy from DeviceEvents DE join DeviceRegister DR on DE.deviceRegID =  DR.deviceRegID join ServiceLocation SL on SL.serviceID = DR.serviceID join CustomerAddress CA on CA.addressID = SL.addressID where EXTRACT(MONTH FROM DE.timestamp) = $1 AND EXTRACT(YEAR FROM DE.timestamp) = $2 AND DE.eventLabel = 'Energy Consumed'and custID = $3 group by SL.serviceID",
@@ -258,7 +234,7 @@ const getTotalEnergyPerLocation = (client, custID, body) => {
                 reject(error);
             }
             if (results && results.rows){
-                resolve(results.row[0]);
+                resolve(results.rows);
             }
             else{
                 reject(new Error("No results found"));
@@ -267,7 +243,7 @@ const getTotalEnergyPerLocation = (client, custID, body) => {
     });
 }
 
-const getTotalPricePerLocation = (client, custID, body) => {
+const getTotalPricePerLocation = (custID, body) => {
     const {month, year} = body;
     return new Promise(function(resolve, reject){
         pool.query("select SL.serviceID, SUM(DE.value * PT.price) AS total_energy_cost from DeviceEvents DE join DeviceRegister DR on DE.deviceRegID = DR.deviceRegID join ServiceLocation SL on SL.serviceID = DR.serviceID join CustomerAddress CA on CA.addressID = SL.addressID join Address A on A.addressID = CA.addressID join PriceTable PT on PT.zipcode = A.zipcode and PT.time = (select max(time) from PriceTable where zipcode = A.zipcode and time < DE.timestamp) where EXTRACT(MONTH FROM DE.timestamp) = $1 AND EXTRACT(YEAR FROM DE.timestamp) = $2 AND DE.eventLabel = 'Energy Consumed' and custID = $3 group by SL.serviceID",
@@ -277,7 +253,7 @@ const getTotalPricePerLocation = (client, custID, body) => {
                 reject(error);
             }
             if (results && results.rows){
-                resolve(results.row[0]);
+                resolve(results.rows);
             }
             else{
                 reject(new Error("No results found."));
@@ -288,7 +264,7 @@ const getTotalPricePerLocation = (client, custID, body) => {
 }
 
 
-const getTotalEnergyPerDevice = (client, custID, body) => {
+const getTotalEnergyPerDevice = (custID, body) => {
     const {month, year } = body;
     return new Promise(function (resolve, reject){
         pool.query("SELECT EXTRACT(HOUR FROM DE.timestamp) as time , SUM(DE.value) AS total_energy FROM DeviceEvents DE join DeviceRegister DR on DE.deviceRegID =  DR.deviceRegID join ServiceLocation SL on SL.serviceID = DR.serviceID join CustomerAddress CA on CA.addressID = SL.addressID WHERE EXTRACT(MONTH FROM DE.timestamp) = $1 AND EXTRACT(YEAR FROM DE.timestamp) = $2 and CA.custID = $3 GROUP BY DR.deviceRegID, EXTRACT(HOUR FROM DE.timestamp)",
@@ -298,7 +274,7 @@ const getTotalEnergyPerDevice = (client, custID, body) => {
                 reject(error);
             }
             if (results && results.rows){
-                resolve(results.row[0]);
+                resolve(results.rows);
             }
             else{
                 reject(new Error("No results found"));
@@ -307,17 +283,17 @@ const getTotalEnergyPerDevice = (client, custID, body) => {
     });
 }
 
-const getTotalPricePerDevice = (client, custID, body) => {
+const getTotalPricePerDevice = (custID, body) => {
     const {month, year} = body;
     return new Promise(function(resolve, reject){
-        pool.query("select EXTRACT(HOUR FROM DE.timestamp) as time ,SUM(DE.value*PT.price) AS total_priceFROM = DR.deviceRegID join ServiceLocation SL on SL.serviceID = DR.serviceID join CustomerAddress CA on CA.addressID = SL.addressID join Address A on A.addressID = CA.addressID join PriceTable PT on PT.zipcode = A.zipcode and PT.time = (select max(time) from PriceTable where zipcode = A.zipcode and time < DE.timestamp) where  EXTRACT(MONTH FROM DE.timestamp) = monthInput AND EXTRACT(YEAR FROM DE.timestamp) = yearInput  AND DE.eventLabel = 'Energy Consumed'    AND custID = inputcustID group by DR.deviceRegID, EXTRACT(HOUR FROM DE.timestamp)",
+        pool.query("select EXTRACT(HOUR FROM DE.timestamp) as time ,SUM(DE.value*PT.price) AS total_priceFROM = DR.deviceRegID join ServiceLocation SL on SL.serviceID = DR.serviceID join CustomerAddress CA on CA.addressID = SL.addressID join Address A on A.addressID = CA.addressID join PriceTable PT on PT.zipcode = A.zipcode and PT.time = (select max(time) from PriceTable where zipcode = A.zipcode and time < DE.timestamp) where  EXTRACT(MONTH FROM DE.timestamp) = $1 AND EXTRACT(YEAR FROM DE.timestamp) = $2 AND DE.eventLabel = 'Energy Consumed' AND custID = $3 group by DR.deviceRegID, EXTRACT(HOUR FROM DE.timestamp)",
         [month, year, custID],
         (error, results) => {
             if (error){
                 reject(error);
             }
             if (results && results.rows){
-                resolve(results.row[0]);
+                resolve(results.rows);
             }
             else{
                 reject(new Error("No results found."));
@@ -327,7 +303,7 @@ const getTotalPricePerDevice = (client, custID, body) => {
     });
 }
 
-const createDeviceRegister = (client, deviceID, serviceID) => {
+const createDeviceRegister = (deviceID, serviceID) => {
     return new Promise(function (resolve, reject){
         client.query(
             "INSERT INTO DeviceRegister (deviceID, serviceID) VALUES ($1, $2) RETURNING *",
@@ -347,6 +323,21 @@ const createDeviceRegister = (client, deviceID, serviceID) => {
     });
 }
 
+const deleteServiceLocation = (serviceID) => {
+    return new Promise(function (resolve, reject){
+        pool.query(
+            "DELETE FROM ServiceLocation WHERE serviceID = $1",
+            [serviceID],
+            (error, results) => {
+                if (error){
+                    reject(error);
+                }
+                resolve(serviceID);
+            }
+        );
+    });
+}
+
 
 
 
@@ -360,13 +351,12 @@ module.exports = {
     registerAddress,
     registerCustomerAddress,
     registerServiceLoc,
-    getAddressByCustomerId,
     getServiceLocByCustomerId,
     getDevicesList,
     getTotalEnergyPerLocation,
     getTotalPricePerLocation,
     getTotalEnergyPerDevice,
     getTotalPricePerDevice,
-    createDeviceRegister
-
+    createDeviceRegister,
+    deleteServiceLocation
 };
