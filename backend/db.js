@@ -3,7 +3,7 @@ const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
     database: 'SHEMS-database',
-    password: 'admin',
+    password: 'anish1017',
     port: 5432,
 });
 
