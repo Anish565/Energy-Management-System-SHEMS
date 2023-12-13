@@ -288,7 +288,6 @@ const getTotalPricePerLocation = (client, custID, body) => {
 }
 
 
-// const getTotalEnergyPerDevice = (client, custID)
 const getTotalEnergyPerDevice = (client, custID, body) => {
     const {month, year } = body;
     return new Promise(function (resolve, reject){
@@ -328,6 +327,30 @@ const getTotalPricePerDevice = (client, custID, body) => {
     });
 }
 
+const createDeviceRegister = (client, deviceID, serviceID) => {
+    return new Promise(function (resolve, reject){
+        client.query(
+            "INSERT INTO DeviceRegister (deviceID, serviceID) VALUES ($1, $2) RETURNING *",
+            [deviceID, serviceID],
+            (error, results) => {
+                if (error){
+                    reject(error);
+                }
+                if (results && results.rows){
+                    resolve(results.rows[0])
+                }
+                else{
+                    reject(new Error("No results found"));
+                }
+            }
+        );
+    });
+}
+
+
+
+
+
 module.exports = {
     getCustomer,
     createCustomer,
@@ -341,5 +364,9 @@ module.exports = {
     getServiceLocByCustomerId,
     getDevicesList,
     getTotalEnergyPerLocation,
+    getTotalPricePerLocation,
+    getTotalEnergyPerDevice,
+    getTotalPricePerDevice,
+    createDeviceRegister
 
 };

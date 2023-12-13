@@ -1,6 +1,6 @@
 import React from 'react'
-import BarGraph from './graphs/barchart'
-import LineChart from './graphs/linechart'
+import BarGraph from './graphs/BarChart'
+import LineChart from './graphs/LineChart'
 
 export const DisplayComponent = () => {
   return (
@@ -9,6 +9,10 @@ export const DisplayComponent = () => {
         <div id="graphroom">
             <h1 className='text-7xl'>Graphs here</h1>
         </div>
+        <div>
+          <BarGraph/>
+        </div>
+        <LineChart/>
     </div>
   )
 }

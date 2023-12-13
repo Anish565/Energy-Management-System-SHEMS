@@ -18,9 +18,7 @@ class LineChart extends React.Component {
     var data = [trace1, trace2];
 
     return (
-      <Plot
-        data={data}
-      />
+      <Plot data={data}/>
     );
   }
 }
