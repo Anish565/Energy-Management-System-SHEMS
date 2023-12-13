@@ -10,7 +10,7 @@ const login = async (req, res) => {
       return res.json({ error: 'Incorrect password' })
     }
 
-    jwt.sign({ id: customer.custID }, 'secret', (err, token) => {
+    jwt.sign({ id: customer.custid }, 'secret', (err, token) => {
       if (err) {
         return res.json({ error: 'Error signing token' })
       }

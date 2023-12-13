@@ -29,8 +29,10 @@ const createServiceLog = async (req, res) => {
 
 const getDevicesList =  async (req, res) => {
   try {
+    console.log("getting devices...")
     const devices = await customer_model.getDevicesList()
-    return res.json(devices)
+    console.log(devices)
+    return res.json({devices})
   } catch (e) {
     console.error(e)
     res.json({ error: e.message })
@@ -69,7 +71,7 @@ const createDeviceRegister = async (req, res) => {
 
 const getTotalEnergyPerLocation = async (req, res) => {
   try {
-    const totalEnergy = await customer_model.getTotalEnergyPerLocation(req.params.id)
+    const totalEnergy = await customer_model.getTotalEnergyPerLocation(req.customer.id, req.body)
     return res.json(totalEnergy)
   } catch (e) {
     console.log(e)
@@ -77,10 +79,35 @@ const getTotalEnergyPerLocation = async (req, res) => {
   }
 }
 
+const getTotalEnergyPerDevice = async (req, res) => {
+  try {
+    const energyPerDevice = await customer_model.getTotalEnergyPerDevice(req.customer.id, req.body)
+    return res.json(energyPerDevice)
+  } catch (e) {
+    console.log(e)
+    res.json({ error: e.message })
+  }
+}
 
+const getTotalPricePerLocation = async (req, res) => {
+  try {
+    const totalPrice = await customer_model.getTotalPricePerLocation(req.customer.id, req.body)
+    return res.json(totalPrice)
+  } catch (e) {
+    console.log(e)
+    res.json({ error: e.message })
+  }
+}
 
-
-
+const getTotalPricePerDevice = async (req, res) => {
+  try {
+    const pricePerDevice = await customer_model.getTotalPricePerDevice(req.customer.id, req.body)
+    return res.json(pricePerDevice)
+  } catch (e) {
+    console.log(e)
+    res.json({ error: e.message })
+  }
+}
 
 
 
@@ -90,5 +117,9 @@ module.exports = {
   getDevicesList,
   deleteServiceLocation,
   getServiceLocationsByCustomer,
-  createDeviceRegister
+  createDeviceRegister,
+  getTotalEnergyPerLocation,
+  getTotalEnergyPerDevice,
+  getTotalPricePerLocation,
+  getTotalPricePerDevice
 }

@@ -181,12 +181,13 @@ const getServiceLocByCustomerId = async (custID) => {
 const getDevicesList = async () =>{
     try{
         return await new Promise(function (resolve, reject){
-            pool.query("Select * from DeviceRegister",
+            pool.query("select * from Devices",
             (error, results) => {
                 if (error){
                     reject(error);
                 }
                 if (results && results.rows){
+                    console.log(results.rows)
                     resolve(results.rows);
                 }
                 else{
