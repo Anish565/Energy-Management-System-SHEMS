@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from "react-router-dom";
 import { FormTextElement } from './ui/FormElement'
 import axios from "axios"
+import { cleanData } from './utils/dompurify';
 
 export const Register = () => {
   const [cfname, setCfname] = useState('');
@@ -19,15 +20,15 @@ export const Register = () => {
   const handleSingup = (e) => {
     e.preventDefault();
     axios.post("http://localhost:3001/auth/signup", {
-      cfname: cfname,
-      clname: clname,
-      custID: user,
-      passcode: password,
-      street: street,
-      unitno: unit,
-      city: city,
-      state: state,
-      zipcode: zip,
+      cfname: cleanData(cfname),
+      clname: cleanData(clname),
+      custID: cleanData(user),
+      passcode: cleanData(password),
+      street: cleanData(street),
+      unitno: cleanData(unit),
+      city: cleanData(city),
+      state: cleanData(state),
+      zipcode: cleanData(zip),
       isBilling: true
     }).then((response) => {
       if (response.data.error) {

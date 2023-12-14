@@ -13,8 +13,8 @@ export const Graph1 = () => {
 
   }
 
-  const [month, setMonth] = useState('');
-  const [year, setYear] = useState('');
+  const [month, setMonth] = useState('1')
+  const [year, setYear] = useState('2023')
   
   const [streets, setStreets] = useState([]);
   const [totalEnergy, setTotalEnergy] = useState([]);

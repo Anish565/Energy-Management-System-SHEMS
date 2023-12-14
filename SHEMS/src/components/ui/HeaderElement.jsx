@@ -26,12 +26,12 @@ export const HeaderElement = () => {
           { userStore.user ?  <Link to="/graphs/graph4" href="#" className="text-gray-600 dark:text-gray-200 mx-3 hover:text-gray-500">Graph4</Link> : null} */}
           {
             userStore.user ? 
-            <div className="relative inline-block text-left">
+            <div className="relative z-50 inline-block text-left"  onClick={toggleDropdown}>
       <button
         type="button"
         className="inline-flex justify-center w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-800 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-800 focus:ring-blue-500 dark:focus:ring-blue-600"
         id="dropdown-menu"
-        onClick={toggleDropdown}
+       
       >
         Graphs
         <svg

@@ -38,19 +38,18 @@ export const Profile = () => {
           // create a card for serviceLoc
           return (
             <div className="flex flex-col bg-gray-700 p-4 my-4 rounded-lg" key={i}>
-              <div className="flex flex-row justify-between">
+              <div className="flex flex-col justify-start">
                 <p className="text-white text-xl font-bold">{serviceLoc.street}</p>
                 <p className="text-white text-xl font-bold">{serviceLoc.city}, {serviceLoc.state} {serviceLoc.zipcode}</p>
               </div>
-              <div className="flex flex-row justify-between">
-                <p className="text-white text-xl font-bold">Move In Date: {serviceLoc.moveindate}</p>
+              <div className="flex flex-col justify-start">
                 <p className="text-white text-xl font-bold">Square Footage: {serviceLoc.squarefoot}</p>
               </div>
-              <div className="flex flex-row justify-between">
+              <div className="flex flex-col justify-start">
                 <p className="text-white text-xl font-bold">Number of Bedrooms: {serviceLoc.numbed}</p>
                 <p className="text-white text-xl font-bold">Number of Occupants: {serviceLoc.numoccupants}</p>
               </div>
-              <div className="flex flex-row justify-between">
+              <div className="flex flex-col justify-start">
                 <p className="text-white text-xl font-bold">Billing Address: {serviceLoc.isbilling ? "Yes" : "No"}</p>
               </div>
             </div>

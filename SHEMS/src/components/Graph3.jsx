@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import BarGraph from './graphs/BarChart'
 import axios from 'axios'
 import { useUserStore } from '../stores/userStore'
@@ -12,8 +12,8 @@ export const Graph3 = () => {
 
   }
 
-  const [month, setMonth] = React.useState('');
-  const [year, setYear] = React.useState('');
+  const [month, setMonth] = useState('1')
+  const [year, setYear] = useState('2023')
 
   const [streets, setStreets] = React.useState([]);
   const [totalPrice, setTotalprice] = React.useState([]);

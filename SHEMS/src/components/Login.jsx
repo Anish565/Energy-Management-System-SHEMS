@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FormTextElement } from './ui/FormElement';
 import { useUserStore } from '../stores/userStore';
 import axios from "axios"
+import { cleanData } from './utils/dompurify';
 
 export const Login = () => {
   const [username, setUsername] = useState('');
@@ -15,9 +16,10 @@ export const Login = () => {
   const handleLogin = () => {
     setDisabled(true);
     axios.post("http://localhost:3001/auth/login", {
-      custID: username,
-      passcode: password,
+      custID: cleanData(username),
+      passcode: cleanData(password),
     }).then((response) => {
+      // response = cleanData(response.data)
       if (response.data.error) {
         alert(response.data.error);
         return

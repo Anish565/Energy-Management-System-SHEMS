@@ -3,6 +3,7 @@ import { FormTextElement } from "./ui/FormElement";
 import axios from "axios"
 import { useNavigate } from "react-router";
 import { useUserStore } from "../stores/userStore";
+import { cleanData } from "./utils/dompurify";
 
 export const Location = () => {
   const [street, setStreet] = useState('');
@@ -24,11 +25,11 @@ export const Location = () => {
     try {
       e.preventDefault();
       axios.post("http://localhost:3001/customer/serviceLoc", {
-        street: street,
-        unitno: unit,
-        city: city,
-        state: state,
-        zipcode: zip,
+        street: cleanData(street),
+        unitno: cleanData(unit),
+        city: cleanData(city),
+        state: cleanData(state),
+        zipcode: cleanData(zip),
         moveInDate: movein,
         squareFoot: sqft,
         numbed: numbed,
